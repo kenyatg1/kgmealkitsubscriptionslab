@@ -1,37 +1,73 @@
--- 1. Select all the records from the customers table.
+------------Step 1. Select All Records from the Customers Table
+
+
 SELECT * FROM customers;
 
--- 2. Find all customers who have a Premium subscription.
+
+------------Step 2. Find All Customers Who Have a Premium Subscription
+
+
 SELECT * FROM customers WHERE subscription_level = 'Premium';
 
--- 3. Get distinct states from the customers table. Sort alphabetically.
+
+------------Step 3. Get Distinct States from the Customers Table, Sorted Alphabetically
+
+
 SELECT DISTINCT state FROM customers ORDER BY state;
 
--- 4. Count the number of customers from the state of NY.
-SELECT COUNT(*) FROM customers WHERE state = 'NY';
 
--- 5. List the customer name and email data for customers with no subscription end date.
-SELECT customer_name, email FROM customers WHERE subscription_end_date IS NULL;
+------------Step 4. Count the Number of Customers from the State of NY
 
--- 6. Create an index on the state column.
+
+SELECT COUNT(*) AS ny_customer_count FROM customers WHERE state = 'NY';
+
+
+------------Step 5. List the Customer Name and Email Data for Customers with No Subscription End Date
+
+
+SELECT full_name, email FROM customers WHERE subscription_end_date IS NULL;
+
+
+------------Step 6. Create an Index on the State Column
+
+
 CREATE INDEX idx_state ON customers(state);
 
--- 7. Insert a new customer into the customers table.
-INSERT INTO customers (customer_name, email, state, subscription_level) VALUES ('John Doe', 'john.doe@example.com', 'CA', 'Basic');
 
--- 8. Update Emma Collins to a Premium subscription.
-UPDATE customers SET subscription_level = 'Premium' WHERE customer_name = 'Emma Collins';
+------------Step 7. Insert a New Customer into the Customers Table
 
--- 9. Count the number of accounts who have an .edu email address.
-SELECT COUNT(*) FROM customers WHERE email LIKE '%.edu';
 
--- 10. Delete all customers whose subscription has expired (assume the date today is August 1, 2024).
+INSERT INTO customers (full_name, email, subscription_level, subscription_start_date, subscription_end_date, state)
+VALUES ('John Doe', 'john.doe@example.com', 'Standard', '2024-10-01', NULL, 'TX');
+
+
+------------Step 8. Update Emma Collins to a Premium Subscription
+
+
+UPDATE customers SET subscription_level = 'Premium' WHERE full_name = 'Emma Collins';
+
+
+------------Step 9. Count the Number of Accounts Who Have an .edu Email Address
+
+
+SELECT COUNT(*) AS edu_email_count FROM customers WHERE email LIKE '%.edu';
+
+
+------------Step 10. Delete All Customers Whose Subscription Has Expired (Assume Today is August 1, 2024)
+
+
 DELETE FROM customers WHERE subscription_end_date < '2024-08-01';
 
--- 11. Select all premium customers in New York, listing their name and email address. Sort by name in ascending order.
-SELECT customer_name, email FROM customers WHERE subscription_level = 'Premium' AND state = 'NY' ORDER BY customer_name;
 
--- 12. Create a new table called meals.
+------------Step 11. Select All Premium Customers in New York, Listing Their Name and Email Address, Sorted by Name in Ascending Order
+
+
+SELECT full_name, email FROM customers WHERE subscription_level = 'Premium' AND state = 'NY' ORDER BY full_name;
+
+
+------------Step 12. Create a New Table Called Meals
+
+
 CREATE TABLE meals (
     meal_id SERIAL PRIMARY KEY,
     meal_name VARCHAR(255) NOT NULL,
@@ -41,35 +77,89 @@ CREATE TABLE meals (
     subscription_level VARCHAR(50)
 );
 
--- 13. Insert 3 meals into the meals table.
+
+------------Step 13. Insert 3 Meals into the Meals Table
+
+
 INSERT INTO meals (meal_name, calories, price, is_vegetarian, subscription_level) VALUES
-('Vegetable Stir Fry', 300, 12.50, TRUE, 'Premium'),
-('Chicken Salad', 400, 15.00, FALSE, 'Basic'),
-('Quinoa Bowl', 350, 10.00, TRUE, 'Standard');
+('Veggie Stir-Fry', 300, 9.99, TRUE, 'Standard'),
+('Chicken Alfredo', 600, 12.99, FALSE, 'Premium'),
+('Quinoa Salad', 250, 8.99, TRUE, 'Standard');
 
--- 14. List the meal names of the first 5 meals that are vegetarian.
-SELECT meal_name FROM meals WHERE is_vegetarian = TRUE LIMIT 5;
 
--- 15. Get all meals sorted by calories in descending order and then by price in ascending order.
-SELECT * FROM meals ORDER BY calories DESC, price ASC;
+------------Step 14. Insert Additional Meals into the Meals Table
 
--- 16. Update the price of all meals with subscription_level 'Premium' to increase by 5.00.
-UPDATE meals SET price = price + 5.00 WHERE subscription_level = 'Premium';
 
--- 17. Calculate the average, max, and min of the price in the meals table.
-SELECT AVG(price) AS average_price, MAX(price) AS max_price, MIN(price) AS min_price FROM meals;
+INSERT INTO meals (meal_name, calories, price, is_vegetarian, subscription_level) VALUES
+('Truffle Risotto', 700, 25.00, FALSE, 'Premium'),
+('Lobster Mac & Cheese', 900, 28.00, FALSE, 'Premium'),
+('Vegetable Quiche', 500, 11.00, TRUE, 'Standard'),
+('Roasted Duck Breast', 700, 22.50, FALSE, 'Premium'),
+('Mushroom Stroganoff', 500, 12.00, TRUE, 'Standard'),
+('Filet Mignon', 700, 30.00, FALSE, 'Premium'),
+('Greek Salad', 500, 9.00, TRUE, 'Standard'),
+('Wild Mushroom Soup', 500, 14.00, TRUE, 'Premium'),
+('Chicken Parmesan', 700, 13.50, FALSE, 'Standard'),
+('Seafood Paella', 900, 26.00, FALSE, 'Premium');
 
--- 18. Get all meals that have a price between 10.00 and 20.00.
-SELECT * FROM meals WHERE price BETWEEN 10.00 AND 20.00;
 
--- BONUS: Add a new INT column named star_rating to meals, initialized to NULL.
-ALTER TABLE meals ADD COLUMN star_rating INT;
+------------Step 15. List the Meal Names of the First 5 Meals that are Vegetarian
 
--- Create a table called "oops" with columns id (SERIAL PRIMARY KEY) and foo (INT).
+
+SELECT meal_name
+FROM meals
+WHERE is_vegetarian = TRUE
+LIMIT 5;
+
+
+------------Step 16. Get All Meals Sorted by Calories in Descending Order and Then by Price in Ascending Order
+
+
+SELECT *
+FROM meals
+ORDER BY calories DESC, price ASC;
+
+
+------------Step 17. Update the Price of All Meals with Subscription Level 'Premium' to Increase by 5.00
+
+
+UPDATE meals
+SET price = price + 5.00
+WHERE subscription_level = 'Premium';
+
+
+------------Step 18. Calculate the Average, Max, and Min of the Price in the Meals Table
+
+
+SELECT AVG(price) AS average_price, MAX(price) AS max_price, MIN(price) AS min_price
+FROM meals;
+
+
+------------Step 19. Get All Meals That Have a Price Between 10.00 and 20.00
+
+
+SELECT *
+FROM meals
+WHERE price BETWEEN 10.00 AND 20.00;
+
+
+------------Step BONUS: Add a New INT Column Named star_rating to Meals, Initialized to NULL
+
+
+ALTER TABLE meals
+ADD COLUMN star_rating INT DEFAULT NULL;
+
+
+------------Step 20. Create a Table Called "oops" with Columns id (SERIAL PRIMARY KEY) and foo (INT)
+
+
 CREATE TABLE oops (
     id SERIAL PRIMARY KEY,
     foo INT
 );
 
--- Drop the "oops" table.
+
+------------Step 21. Drop the "oops" Table
+
+
 DROP TABLE oops;
